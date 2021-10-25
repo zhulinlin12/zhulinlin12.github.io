@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Hello World</title>
+    <url>/2021/10/22/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>computed与watch的区别</title>
+    <url>/2021/10/22/computed%E4%B8%8Ewatch%E7%9A%84%E5%8C%BA%E5%88%AB/</url>
+    <content><![CDATA[<h3 id="一、computed"><a href="#一、computed" class="headerlink" title="一、computed"></a>一、computed</h3><blockquote>
+<p>computed看上去是方法，但是实际上是计算属性，它会根据你所依赖的数据动态显示新的计算结果。计算结果会被缓存，computed的值在getter执行后是会缓存的，只有在它依赖的属性值改变之后，下一次获取computed的值时才会重新调用对应的getter来计算</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">      &#123;&#123;fullName&#125;&#125;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line"><span class="built_in">export</span> default &#123;</span><br><span class="line">    <span class="function"><span class="title">data</span></span>() &#123;</span><br><span class="line">        <span class="built_in">return</span> &#123;</span><br><span class="line">             firstName: <span class="string">&#x27;飞&#x27;</span>,</span><br><span class="line">             lastName: <span class="string">&quot;旋&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    props: &#123;</span><br><span class="line">      msg: String</span><br><span class="line">    &#125;,</span><br><span class="line">    computed: &#123;</span><br><span class="line">        <span class="function"><span class="title">fullName</span></span>() &#123;</span><br><span class="line">            <span class="built_in">return</span> this.firstName + <span class="string">&#x27; &#x27;</span> + this.lastName</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+
+<p><strong>注意：</strong></p>
+<blockquote>
+<p>在Vue的 template模板内（{ {} }）是可以写一些简单的js表达式的很便利，如上直接计算 { {this.firstName + ’ ’ + this.lastName} }，因为在模版中放入太多声明式的逻辑会让模板本身过重，尤其当在页面中使用大量复杂的逻辑表达式处理数据时，会对页面的可维护性造成很大的影响，而 computed 的设计初衷也正是用于解决此类问题。</p>
+</blockquote>
+<p><strong>应用场景：</strong></p>
+<blockquote>
+<p>适用于重新计算比较费时不用重复数据计算的环境。所有 getter 和 setter 的 this 上下文自动地绑定为 Vue 实例。如果一个数据依赖于其他数据，那么把这个数据设计为computed</p>
+</blockquote>
+<h3 id="二、watch"><a href="#二、watch" class="headerlink" title="二、watch"></a>二、watch</h3><blockquote>
+<p>watche 更像是一个 data 的数据监听回调，当依赖的 data 的数据变化，执行回调，在方法中会传入 newVal 和 oldVal。可以提供输入值无效，提供中间值 特场景。Vue 实例将会在实例化时调用 $watch()，遍历 watch 对象的每一个属性。如果你需要在某个数据变化时做一些事情，使用watch。</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div class=<span class="string">&quot;hello&quot;</span>&gt;</span><br><span class="line">      &#123;&#123;fullName&#125;&#125;</span><br><span class="line">      &lt;button @click=<span class="string">&quot;setNameFun&quot;</span>&gt;click&lt;/button&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line"><span class="built_in">export</span> default &#123;</span><br><span class="line">    <span class="function"><span class="title">data</span></span>() &#123;</span><br><span class="line">        <span class="built_in">return</span> &#123;</span><br><span class="line">            firstName: <span class="string">&#x27;飞&#x27;</span>,</span><br><span class="line">            lastName: <span class="string">&quot;旋&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    props: &#123;</span><br><span class="line">      msg: String</span><br><span class="line">    &#125;,</span><br><span class="line">    methods: &#123;</span><br><span class="line">        <span class="function"><span class="title">setNameFun</span></span>() &#123;</span><br><span class="line">            this.firstName = <span class="string">&quot;大&quot;</span>;</span><br><span class="line">            this.lastName = <span class="string">&quot;熊&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    computed: &#123;</span><br><span class="line">        <span class="function"><span class="title">fullName</span></span>() &#123;</span><br><span class="line">            <span class="built_in">return</span> this.firstName + <span class="string">&#x27; &#x27;</span> + this.lastName</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    watch: &#123;</span><br><span class="line">        firstName(newval,oldval) &#123;</span><br><span class="line">          console.log(newval)</span><br><span class="line">          console.log(oldval)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>总结：</strong><br>1.如果一个数据依赖于其他数据，那么把这个数据设计为computed的<br>2.如果你需要在某个数据变化时做一些事情，使用watch来观察这个数据变化</p>
+]]></content>
+      <categories>
+        <category>web前端</category>
+      </categories>
+      <tags>
+        <tag>VUE</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ES6数组去重的常用方法</title>
+    <url>/2021/10/25/ES6%E6%95%B0%E7%BB%84%E5%8E%BB%E9%87%8D%E7%9A%84%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<h3 id="普通数组去重"><a href="#普通数组去重" class="headerlink" title="普通数组去重"></a>普通数组去重</h3><p><strong>数据源</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">const <span class="built_in">test</span> = [<span class="string">&#x27;q&#x27;</span>, <span class="string">&#x27;w&#x27;</span>, <span class="string">&#x27;e&#x27;</span>, <span class="string">&#x27;q&#x27;</span>, <span class="string">&#x27;u&#x27;</span>, <span class="string">&#x27;p&#x27;</span>]</span><br></pre></td></tr></table></figure>
+
+<p><strong>方法一</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[...newSet(<span class="built_in">test</span>)];</span><br></pre></td></tr></table></figure>
+<p><strong>方法二</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Array.from(new Set(<span class="built_in">test</span>))</span><br></pre></td></tr></table></figure>
+<p><strong>方法三</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="keyword">function</span> unique(arr) &#123;</span><br><span class="line">    const res = new Map();</span><br><span class="line">    <span class="built_in">return</span> arr.filter((a) =&gt; !res.has(a) &amp;&amp; res.set(a, 1))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="数组中对象去重"><a href="#数组中对象去重" class="headerlink" title="数组中对象去重"></a>数组中对象去重</h3><p><strong>数据源</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"> <span class="built_in">let</span> person = [</span><br><span class="line">     &#123;id: 0, name: <span class="string">&quot;小明&quot;</span>&#125;,</span><br><span class="line">     &#123;id: 1, name: <span class="string">&quot;小张&quot;</span>&#125;,</span><br><span class="line">     &#123;id: 2, name: <span class="string">&quot;小李&quot;</span>&#125;,</span><br><span class="line">     &#123;id: 3, name: <span class="string">&quot;小孙&quot;</span>&#125;,</span><br><span class="line">     &#123;id: 1, name: <span class="string">&quot;小周&quot;</span>&#125;,</span><br><span class="line">     &#123;id: 2, name: <span class="string">&quot;小陈&quot;</span>&#125;,   </span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+<p><strong>方法一</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> obj = &#123;&#125;;</span><br><span class="line"><span class="built_in">let</span> peon = person.reduce((cur,next) =&gt; &#123;</span><br><span class="line">    obj[next.id] ? <span class="string">&quot;&quot;</span> : obj[next.id] = <span class="literal">true</span> &amp;&amp; cur.push(next);</span><br><span class="line">    <span class="built_in">return</span> cur;</span><br><span class="line">&#125;,[]) //设置cur默认类型为数组，并且初始值为空的数组</span><br><span class="line">console.log(peon);</span><br></pre></td></tr></table></figure>
+
+<p>reduce()方法接收一个回调函数作为第一个参数，回调函数又接受四个参数，分别是：</p>
+<p>*1.previousValue =&gt; 初始值或上一次回调函数叠加的值；</p>
+<p>*2. currentValue =&gt; 本次回调（循环）将要执行的值；</p>
+<p>*3. index =&gt;“currentValue”的索引值；</p>
+<p>*4. arr =&gt; 数组本身；</p>
+<p><strong>方法二</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">const uniqueFun = (arr,<span class="built_in">type</span>) =&gt; &#123;</span><br><span class="line">   const res = new Map();</span><br><span class="line">   <span class="built_in">return</span> arr.filter((a)=&gt;!res.has(a[<span class="built_in">type</span>])&amp;&amp; res.set(a[<span class="built_in">type</span>],1));</span><br><span class="line">&#125;</span><br><span class="line">console.log(uniqueFun(arr,<span class="string">&quot;id&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>web前端</category>
+      </categories>
+      <tags>
+        <tag>ES6</tag>
+      </tags>
+  </entry>
+</search>
